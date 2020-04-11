@@ -1,4 +1,4 @@
-package cmd
+package command
 
 import (
 	"bytes"
@@ -13,6 +13,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// MissingSnippetTitleError ...
 var MissingSnippetTitleError = errors.New("snippet title is not selected")
 
 func loadConfigAndSnippetsMeta() (*config.Config, *snippet.SnippetsMeta, error) {

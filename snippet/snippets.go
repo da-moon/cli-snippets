@@ -13,6 +13,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// SnippetsMeta ...
 type SnippetsMeta struct {
 	Snippets    []*jsonSnippet `json:"snippets"`
 	IsMetaDirty bool           `json:"is_meta_dirty"`
@@ -25,14 +26,17 @@ type jsonSnippet struct {
 	Title   string `json:"title"`
 }
 
+// SetFileLoc ...
 func (sm *SnippetsMeta) SetFileLoc(fileLoc string) {
 	sm.fileLoc = fileLoc
 }
 
+// SetSnippetsDir ...
 func (sm *SnippetsMeta) SetSnippetsDir(path string) {
 	sm.snippetsDir = path
 }
 
+// SyncWithSnippets ...
 func (sm *SnippetsMeta) SyncWithSnippets() error {
 	for _, s := range sm.Snippets {
 		// update file location to always use snippetsDir
@@ -59,6 +63,7 @@ func (sm *SnippetsMeta) SyncWithSnippets() error {
 	return nil
 }
 
+// Save ...
 func (sm *SnippetsMeta) Save() error {
 	if _, err := os.Stat(sm.fileLoc); os.IsNotExist(err) {
 		return err
@@ -107,6 +112,7 @@ func (sm *SnippetsMeta) isDuplicate(title string) bool {
 	return false
 }
 
+// DeleteSnippet ...
 func (sm *SnippetsMeta) DeleteSnippet(title string) error {
 	idx, err := sm.findJsonSnippetIndex(title)
 	if err != nil {
@@ -130,6 +136,7 @@ func (sm *SnippetsMeta) DeleteSnippet(title string) error {
 	return nil
 }
 
+// FindSnippet ...
 func (sm *SnippetsMeta) FindSnippet(title string) (*Snippet, error) {
 	idx, err := sm.findJsonSnippetIndex(title)
 	if err != nil {
@@ -159,6 +166,7 @@ func (sm *SnippetsMeta) findJsonSnippetIndex(title string) (int, error) {
 	return idx, nil
 }
 
+// GetSnippetTitles ...
 func (sm *SnippetsMeta) GetSnippetTitles() []string {
 	titles := make([]string, len(sm.Snippets))
 	for idx, s := range sm.Snippets {

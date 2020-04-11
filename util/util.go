@@ -14,19 +14,28 @@ import (
 )
 
 const (
+	// JSON_MARSHAL_PREFIX ...
 	JSON_MARSHAL_PREFIX = ""
+	// JSON_MARSHAL_INDENT ...
 	JSON_MARSHAL_INDENT = "  "
-	STEP_RANGE_SEP      = "-"
-	NEXT_LINE_SUFFIX    = "\\"
+	// STEP_RANGE_SEP ...
+	STEP_RANGE_SEP = "-"
+	// NEXT_LINE_SUFFIX ...
+	NEXT_LINE_SUFFIX = "\\"
 )
 
 const (
-	SHELL_RED      = "\033[0;31m"
-	SHELL_GREEN    = "\033[0;32m"
-	SHELL_YELLOW   = "\033[1;33m"
+	// SHELL_RED ...
+	SHELL_RED = "\033[0;31m"
+	// SHELL_GREEN ...
+	SHELL_GREEN = "\033[0;32m"
+	// SHELL_YELLOW ...
+	SHELL_YELLOW = "\033[1;33m"
+	// SHELL_NO_COLOR ...
 	SHELL_NO_COLOR = "\033[0m"
 )
 
+// LoadJsonDataFromFile ...
 func LoadJsonDataFromFile(filePath string, object interface{}) error {
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -38,6 +47,7 @@ func LoadJsonDataFromFile(filePath string, object interface{}) error {
 	return nil
 }
 
+// Scan ...
 func Scan(prompt string, defaultInp string, historyFile string) (string, error) {
 	// create config
 	config := &readline.Config{
@@ -79,6 +89,7 @@ func Scan(prompt string, defaultInp string, historyFile string) (string, error) 
 	return "", errors.New("cancelled")
 }
 
+// Execute ...
 func Execute(command string, r io.Reader, w io.Writer) error {
 	// Retrieve the default shell. Otherwise, fallback to `sh`
 	defaultShell, isPresent := os.LookupEnv("SHELL")
@@ -95,6 +106,7 @@ func Execute(command string, r io.Reader, w io.Writer) error {
 	return nil
 }
 
+// GetOrCreatePath ...
 func GetOrCreatePath(loc string, perm os.FileMode, isDir bool) error {
 	dirPath := path.Dir(loc)
 	if isDir {

@@ -15,13 +15,19 @@ import (
 )
 
 const (
-	SHELL_BASH        = "bash"
-	SHELL_ZSH         = "zsh"
-	SHELL_FISH        = "fish"
+	// SHELL_BASH ...
+	SHELL_BASH = "bash"
+	// SHELL_ZSH ...
+	SHELL_ZSH = "zsh"
+	// SHELL_FISH ...
+	SHELL_FISH = "fish"
+	// SHELL_UNSUPPORTED ...
 	SHELL_UNSUPPORTED = "unsupported"
 )
 
 var shellType string
+
+// TempHistFile ...
 var TempHistFile = "/tmp/corgi.hist"
 
 func getFishHistoryPath(homeDir string) string {
@@ -81,6 +87,7 @@ func getHistoryFilePath() (string, error) {
 	return histFilePath, nil
 }
 
+// ParseFileToStringArray ...
 func ParseFileToStringArray(filePath string, parser CommandParser) ([]string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -97,6 +104,7 @@ func ParseFileToStringArray(filePath string, parser CommandParser) ([]string, er
 	return lines, nil
 }
 
+// ReadShellHistory ...
 func ReadShellHistory() ([]string, error) {
 	histFilePath, err := getHistoryFilePath()
 	if err != nil {
@@ -110,6 +118,7 @@ func ReadShellHistory() ([]string, error) {
 	return lines, nil
 }
 
+// SetUpHistFile ...
 func SetUpHistFile(histCmds []string) error {
 	// write commands to temp history file
 	f, err := os.OpenFile(TempHistFile, os.O_RDWR|os.O_CREATE, 0644)
@@ -126,6 +135,7 @@ func SetUpHistFile(histCmds []string) error {
 	return nil
 }
 
+// RemoveHistFile ...
 func RemoveHistFile() error {
 	if err := os.Remove(TempHistFile); err != nil {
 		return err

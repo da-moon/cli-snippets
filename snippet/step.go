@@ -11,25 +11,30 @@ import (
 	"github.com/fatih/color"
 )
 
+// StepInfo ...
 type StepInfo struct {
 	Command     string `json:"command"`
 	Description string `json:"description,omitempty"`
 }
 
+// TemplateParamsRegex ...
 var TemplateParamsRegex = `<([^(<>)]+)>`
 
+// TemplateField ...
 type TemplateField struct {
 	FieldName string
 	Value     string
 	Asked     bool
 }
 
+// NewStepInfo ...
 func NewStepInfo(command string) *StepInfo {
 	return &StepInfo{
 		Command: command,
 	}
 }
 
+// AskQuestion ...
 func (step *StepInfo) AskQuestion(options ...interface{}) error {
 	// set command
 	cmd, err := util.Scan(color.GreenString("Command: "), step.Command, TempHistFile)
@@ -46,6 +51,7 @@ func (step *StepInfo) AskQuestion(options ...interface{}) error {
 	return nil
 }
 
+// ConvertToShellScript ...
 func (step *StepInfo) ConvertToShellScript(templates *TemplateFieldMap) string {
 	shellCmds := make([]string, 0)
 	templateFieldsMap := ParseTemplateFieldsMap(step.Command)
@@ -116,6 +122,7 @@ func getParamNameAndValue(p string) (string, string) {
 	return field, val
 }
 
+// ParseTemplateFieldsMap ...
 func ParseTemplateFieldsMap(c string) TemplateFieldMap {
 	re := regexp.MustCompile(TemplateParamsRegex)
 	params := re.FindAllString(c, -1)
@@ -130,6 +137,7 @@ func ParseTemplateFieldsMap(c string) TemplateFieldMap {
 	return tfMap
 }
 
+// FillTemplates ...
 func FillTemplates(c string, tfMap *TemplateFieldMap) string {
 	re := regexp.MustCompile(TemplateParamsRegex)
 	filledCmd := re.ReplaceAllStringFunc(c, func(sub string) string {
@@ -143,6 +151,7 @@ func FillTemplates(c string, tfMap *TemplateFieldMap) string {
 	return filledCmd
 }
 
+// AskQuestion ...
 func (tf *TemplateField) AskQuestion(options ...interface{}) error {
 	val, err := util.Scan(color.GreenString("Enter value for <%s>: ", tf.FieldName), tf.Value, "")
 	if err != nil {

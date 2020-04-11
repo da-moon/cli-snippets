@@ -13,6 +13,7 @@ import (
 	"github.com/da-moon/cli-snippets/util"
 )
 
+// Config ...
 type Config struct {
 	SnippetsFile string `json:"snippets_file"`
 	SnippetsDir  string `json:"snippets_dir"`
@@ -21,16 +22,24 @@ type Config struct {
 }
 
 const (
-	DEFAULT_CONFIG_FILE     = "corgi_conf.json"
-	DEFAULT_SNIPPETS_DIR    = "snippets"
-	DEFAULT_SNIPPETS_FILE   = "snippets.json"
-	DEFAULT_EDITOR          = "vim"
-	DEFAULT_FILTER_CMD_FZF  = "fzf"
+	// DEFAULT_CONFIG_FILE ...
+	DEFAULT_CONFIG_FILE = "corgi_conf.json"
+	// DEFAULT_SNIPPETS_DIR ...
+	DEFAULT_SNIPPETS_DIR = "snippets"
+	// DEFAULT_SNIPPETS_FILE ...
+	DEFAULT_SNIPPETS_FILE = "snippets.json"
+	// DEFAULT_EDITOR ...
+	DEFAULT_EDITOR = "vim"
+	// DEFAULT_FILTER_CMD_FZF ...
+	DEFAULT_FILTER_CMD_FZF = "fzf"
+	// DEFAULT_FILTER_CMD_PECO ...
 	DEFAULT_FILTER_CMD_PECO = "peco"
 )
 
+// MissingDefaultFilterCmdError ...
 var MissingDefaultFilterCmdError = errors.New("missing default filter cmd")
 
+// GetDefaultConfigHome ...
 func GetDefaultConfigHome() string {
 	var configHome string
 	var isPresent bool
@@ -45,6 +54,7 @@ func GetDefaultConfigHome() string {
 	return configHome
 }
 
+// GetDefaultConfigFile ...
 func GetDefaultConfigFile(configHome string) (string, error) {
 	var defaultConfigFileLoc = path.Join(configHome, DEFAULT_CONFIG_FILE)
 	if err := util.GetOrCreatePath(defaultConfigFileLoc, 0755, false); err != nil {
@@ -53,6 +63,7 @@ func GetDefaultConfigFile(configHome string) (string, error) {
 	return defaultConfigFileLoc, nil
 }
 
+// GetDefaultSnippetsDir ...
 func GetDefaultSnippetsDir(configHome string) (string, error) {
 	var defaultSnippetsDir = path.Join(configHome, DEFAULT_SNIPPETS_DIR)
 	if err := util.GetOrCreatePath(defaultSnippetsDir, 0755, true); err != nil {
@@ -61,6 +72,7 @@ func GetDefaultSnippetsDir(configHome string) (string, error) {
 	return defaultSnippetsDir, nil
 }
 
+// GetDefaultSnippetsFile ...
 func GetDefaultSnippetsFile(configHome string) (string, error) {
 	var defaultSnippetsFile = path.Join(configHome, DEFAULT_SNIPPETS_FILE)
 	if err := util.GetOrCreatePath(defaultSnippetsFile, 0755, false); err != nil {
@@ -69,6 +81,7 @@ func GetDefaultSnippetsFile(configHome string) (string, error) {
 	return defaultSnippetsFile, nil
 }
 
+// GetDefaultEditor ...
 func GetDefaultEditor() (string, error) {
 	editorPath, suc := os.LookupEnv("EDITOR")
 	if !suc {
@@ -81,6 +94,7 @@ func GetDefaultEditor() (string, error) {
 	return editorPath, nil
 }
 
+// GetDefaultFilterCmd ...
 func GetDefaultFilterCmd() (string, error) {
 	filterCmdPath, err := exec.LookPath(DEFAULT_FILTER_CMD_PECO)
 	if err != nil {
@@ -96,6 +110,7 @@ func GetDefaultFilterCmd() (string, error) {
 	return filterCmdPath, nil
 }
 
+// Load ...
 func Load() (*Config, error) {
 	// find config dir location
 	configHome := GetDefaultConfigHome()
@@ -140,6 +155,7 @@ func Load() (*Config, error) {
 	return config, nil
 }
 
+// LoadSnippetsMeta ...
 func (c *Config) LoadSnippetsMeta() (*snippet.SnippetsMeta, error) {
 	if _, err := os.Stat(c.SnippetsFile); os.IsNotExist(err) {
 		return nil, err
@@ -158,6 +174,7 @@ func (c *Config) LoadSnippetsMeta() (*snippet.SnippetsMeta, error) {
 	return snippetsMeta, nil
 }
 
+// Save ...
 func (c *Config) Save() error {
 	configHome := GetDefaultConfigHome()
 	// get config file
@@ -173,6 +190,7 @@ func (c *Config) Save() error {
 	return err
 }
 
+// IsNew ...
 func (c *Config) IsNew() bool {
 	return c.SnippetsFile == "" && c.SnippetsDir == "" && c.Editor == "" && c.FilterCmd == ""
 }

@@ -13,27 +13,35 @@ import (
 )
 
 const (
-	EXPORT_TYPE_JSON  = "json"
+	// EXPORT_TYPE_JSON ...
+	EXPORT_TYPE_JSON = "json"
+	// EXPORT_TYPE_SHELL ...
 	EXPORT_TYPE_SHELL = "shell"
 )
 
+// Snippet ...
 type Snippet struct {
 	Title   string      `json:"title"`
 	Steps   []*StepInfo `json:"steps"`
 	fileLoc string
 }
 
-type TemplateFieldMap map[string]*TemplateField // map from field name to template field object
+// TemplateFieldMap ...
+type TemplateFieldMap map[string]*TemplateField
 
+// Answerable ...
 type Answerable interface {
 	AskQuestion(options ...interface{}) error
 }
 
 var (
+	// MissingDefaultValueError ...
 	MissingDefaultValueError = errors.New("missing default value for template field")
-	InvalidStepRangeError    = errors.New("step range specified is invalid")
+	// InvalidStepRangeError ...
+	InvalidStepRangeError = errors.New("step range specified is invalid")
 )
 
+// NewSnippet ...
 func NewSnippet(title string, cmds []string) (*Snippet, error) {
 	snippet := &Snippet{
 		Title: title,
@@ -44,6 +52,7 @@ func NewSnippet(title string, cmds []string) (*Snippet, error) {
 	return snippet, nil
 }
 
+// LoadSnippet ...
 func LoadSnippet(filePath string) (*Snippet, error) {
 	snippet := &Snippet{}
 	if err := util.LoadJsonDataFromFile(filePath, snippet); err != nil {
@@ -53,6 +62,7 @@ func LoadSnippet(filePath string) (*Snippet, error) {
 	return snippet, nil
 }
 
+// AskQuestion ...
 func (snippet *Snippet) AskQuestion(options ...interface{}) error {
 	// check options
 	initialDefaultCmds := options[0].([]string)
@@ -108,6 +118,7 @@ func getSnippetFileName(title string) string {
 	return fmt.Sprintf("%s.json", strings.Replace(title, " ", "_", -1))
 }
 
+// Save ...
 func (snippet *Snippet) Save(snippetsDir string) error {
 	fmt.Printf("Saving snippet \"%s\"... ", snippet.Title)
 	filePath := fmt.Sprintf("%s/%s", snippetsDir, getSnippetFileName(snippet.Title))
@@ -120,6 +131,7 @@ func (snippet *Snippet) Save(snippetsDir string) error {
 	return nil
 }
 
+// Export ...
 func (snippet *Snippet) Export(outputPath string, fileType string) error {
 	fmt.Printf("Exporting snippet %s... ", snippet.Title)
 	var err error
@@ -139,6 +151,7 @@ func (snippet *Snippet) Export(outputPath string, fileType string) error {
 	return nil
 }
 
+// ConvertToShellScript ...
 func (snippet *Snippet) ConvertToShellScript() string {
 	templateFieldMap := snippet.BuildTemplateFieldMap()
 	shellCmds := []string{}
@@ -168,6 +181,7 @@ func (snippet *Snippet) writeToFile(filePath string) error {
 	return nil
 }
 
+// Execute ...
 func (snippet *Snippet) Execute(options ...interface{}) error {
 	fmt.Println(color.GreenString("Start executing snippet \"%s\"...\n", snippet.Title))
 	// build template fields
@@ -206,6 +220,7 @@ func (snippet *Snippet) Execute(options ...interface{}) error {
 	return nil
 }
 
+// Describe ...
 func (snippet *Snippet) Describe() {
 	fmt.Printf("%s: %s\n", color.YellowString("Title"), snippet.Title)
 	for idx, step := range snippet.Steps {
@@ -213,10 +228,12 @@ func (snippet *Snippet) Describe() {
 	}
 }
 
+// GetFilePath ...
 func (snippet *Snippet) GetFilePath() string {
 	return snippet.fileLoc
 }
 
+// BuildTemplateFieldMap ...
 func (snippet *Snippet) BuildTemplateFieldMap() TemplateFieldMap {
 	tfMap := TemplateFieldMap{}
 	for _, step := range snippet.Steps {
@@ -228,6 +245,7 @@ func (snippet *Snippet) BuildTemplateFieldMap() TemplateFieldMap {
 	return tfMap
 }
 
+// ParseStepRangeToIdx ...
 func (snippet *Snippet) ParseStepRangeToIdx(stepRange string) (int, int, error) {
 	if stepRange == "" {
 		return 0, len(snippet.Steps), nil
@@ -283,6 +301,7 @@ func isStepRangeInvalid(start, end, length int) bool {
 	return start < 0 || end > length || start >= end
 }
 
+// AddTemplateFieldIfNotExist ...
 func (tfMap TemplateFieldMap) AddTemplateFieldIfNotExist(t *TemplateField) {
 	if _, ok := tfMap[t.FieldName]; ok {
 		// take the latest non-empty default value

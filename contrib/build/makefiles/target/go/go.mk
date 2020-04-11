@@ -106,12 +106,12 @@ $(GO_BUILD_TARGETS):
 	- $(eval command= ${command} CGO_ENABLED=${CGO})
 	- $(eval command= ${command} GOARCH=${GO_ARCHITECTURE})
 	- $(eval command= ${command} go build -a -installsuffix cgo)
-	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/contrib/build/version.Branch=${BRANCH}' )
-	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/contrib/build/version.BuildUser=${BUILDUSER}' )
-	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/contrib/build/version.BuildDate=${BUILDTIME}' )
-	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/contrib/build/version.Revision=${REVISION}' )
+	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/version.Branch=${BRANCH}' )
+	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/version.BuildUser=${BUILDUSER}' )
+	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/version.BuildDate=${BUILDTIME}' )
+	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/version.Revision=${REVISION}' )
 ifneq (${VERSION}, )
-	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/contrib/build/version.Version=${VERSION}' )
+	- $(eval command= ${command} -ldflags '-X ${GO_PKG}/version.Version=${VERSION}' )
 endif
 	- for pid in $(shell ps  | grep "${name}" | awk '{print $$1}'); do kill -9 "$$pid"; done
 	- $(eval command= ${command} -o .$(PSEP)bin$(PSEP)${name} .$(PSEP)cmd$(PSEP)${name} )
