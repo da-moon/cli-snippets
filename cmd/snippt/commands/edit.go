@@ -1,53 +1,33 @@
-package command
+package commands
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/da-moon/cli-snippets/util"
-	"github.com/spf13/cobra"
+	config "github.com/da-moon/cli-snippets/internal/config"
+	util "github.com/da-moon/cli-snippets/internal/util"
 )
 
-var editCmd = &cobra.Command{
-	Use:   "edit [title]",
-	Short: "Edit a snippet",
-	Args:  cobra.MaximumNArgs(1),
-	RunE:  edit,
-}
+// Edit ...
+func Edit(title string) error {
 
-func edit(cmd *cobra.Command, args []string) error {
-	// load config & snippets
-	conf, snippetsMeta, err := loadConfigAndSnippetsMeta()
-	if err != nil {
-		return err
-	}
-	// find snippet title
-	var title string
-	if len(args) == 0 {
-		title, err = filterSnippetTitle(conf.FilterCmd, snippetsMeta.GetSnippetTitles())
-		if err != nil {
-			return err
-		}
-	} else {
-		title = args[0]
-	}
 	// find snippet
-	s, err := snippetsMeta.FindSnippet(title)
+	s, err := loadSnippet(title)
 	if err != nil {
 		return err
 	}
+	conf, _ := config.Load()
+	snippetsMeta, _ := conf.LoadSnippetsMeta()
 	command := fmt.Sprintf("%s %s", conf.Editor, s.GetFilePath())
-	if err := util.Execute(command, os.Stdin, os.Stdout); err != nil {
+	err = util.Execute(command, os.Stdin, os.Stdout)
+	if err != nil {
 		return err
 	}
 	// mark snippetsMeta dirty
 	snippetsMeta.IsMetaDirty = true
-	if err = snippetsMeta.Save(); err != nil {
+	err = snippetsMeta.Save()
+	if err != nil {
 		return err
 	}
 	return nil
-}
-
-func init() {
-	rootCmd.AddCommand(editCmd)
 }

@@ -1,35 +1,25 @@
-package command
+package commands
 
-import "github.com/spf13/cobra"
-
-var removeCmd = &cobra.Command{
-	Use:   "remove [title]",
-	Short: "Remove a snippet",
-	Args:  cobra.MaximumNArgs(1),
-	RunE:  remove,
-}
-
-func remove(cmd *cobra.Command, args []string) error {
+// Remove ...
+// @TODO maybe add a method to prevent repetitve
+// operation used in loading meta
+func Remove(title string) error {
 	conf, snippetsMeta, err := loadConfigAndSnippetsMeta()
 	if err != nil {
 		return err
 	}
-	// find snippet title
-	var title string
-	if len(args) == 0 {
-		title, err = filterSnippetTitle(conf.FilterCmd, snippetsMeta.GetSnippetTitles())
+	if len(title) == 0 {
+		title, err = filterSnippetTitle(
+			conf.FilterCmd,
+			snippetsMeta.GetSnippetTitles(),
+		)
 		if err != nil {
 			return err
 		}
-	} else {
-		title = args[0]
 	}
-	if err = snippetsMeta.DeleteSnippet(title); err != nil {
+	err = snippetsMeta.DeleteSnippet(title)
+	if err != nil {
 		return err
 	}
 	return nil
-}
-
-func init() {
-	rootCmd.AddCommand(removeCmd)
 }

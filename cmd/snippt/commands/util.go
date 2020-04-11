@@ -1,20 +1,20 @@
-package command
+package commands
 
 import (
 	"bytes"
-	"errors"
 	"io"
 	"os"
 	"strings"
 
-	"github.com/da-moon/cli-snippets/config"
-	"github.com/da-moon/cli-snippets/snippet"
-	"github.com/da-moon/cli-snippets/util"
-	"github.com/fatih/color"
+	config "github.com/da-moon/cli-snippets/internal/config"
+	snippet "github.com/da-moon/cli-snippets/internal/snippet"
+	util "github.com/da-moon/cli-snippets/internal/util"
+	color "github.com/fatih/color"
+	stacktrace "github.com/palantir/stacktrace"
 )
 
-// MissingSnippetTitleError ...
-var MissingSnippetTitleError = errors.New("snippet title is not selected")
+// ErrMissingSnippetTitle ...
+var ErrMissingSnippetTitle = stacktrace.NewError("snippet title is not selected")
 
 func loadConfigAndSnippetsMeta() (*config.Config, *snippet.SnippetsMeta, error) {
 	// load config
@@ -45,11 +45,33 @@ func filterSnippetTitle(filterCmd string, titles []string) (string, error) {
 	if filterCmd != "" {
 		title, err := filter(filterCmd, titles)
 		if err != nil || title == "" {
-			return "", MissingSnippetTitleError
+			return "", ErrMissingSnippetTitle
 		}
 		return title, nil
-	} else {
-		color.Red("Install a fuzzy finder (\"fzf\" or \"peco\") to enable interactive selection")
-		return "", MissingSnippetTitleError
 	}
+	color.Red("Install a fuzzy finder (\"fzf\" or \"peco\") to enable interactive selection")
+	return "", ErrMissingSnippetTitle
+}
+func loadSnippet(title string) (*snippet.Snippet, error) {
+	// load config & snippets
+	conf, snippetsMeta, err := loadConfigAndSnippetsMeta()
+	if err != nil {
+		stacktrace.Propagate(err, "could not load configuration and snippets into memory")
+		return nil, err
+	}
+	// find snippet title
+	if len(title) == 0 {
+		title, err = filterSnippetTitle(conf.FilterCmd, snippetsMeta.GetSnippetTitles())
+		if err != nil {
+			stacktrace.Propagate(err, "could not find snippet for given title '%s'", title)
+			return nil, err
+		}
+	}
+	// find snippet corresponds to title
+	result, err := snippetsMeta.FindSnippet(title)
+	if err != nil {
+		err = stacktrace.Propagate(err, "Run \"snippt list\" to view all snippets")
+		return nil, err
+	}
+	return result, nil
 }

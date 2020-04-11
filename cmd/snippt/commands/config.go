@@ -1,20 +1,11 @@
-package command
+package commands
 
-import (
-	"github.com/spf13/cobra"
-)
-
-var configCmd = &cobra.Command{
-	Use:   "config",
-	Short: "Update corgi configuration",
-	RunE:  configure,
-}
-
-var editor string
-var filterCmd string
-var snippetsDir string
-
-func configure(cmd *cobra.Command, args []string) error {
+// Configure ...
+func Configure(
+	editor string,
+	filterCmd string,
+	snippetsDir string,
+) error {
 	conf, snippetsMeta, err := loadConfigAndSnippetsMeta()
 	if err != nil {
 		return err
@@ -42,11 +33,4 @@ func configure(cmd *cobra.Command, args []string) error {
 		}
 	}
 	return nil
-}
-
-func init() {
-	configCmd.Flags().StringVar(&filterCmd, "filter-cmd", "", "Set the filter command to use for fuzzy searching snippet (default to fzf)")
-	configCmd.Flags().StringVar(&editor, "editor", "", "Set the text editor you would like to use to edit snippet")
-	configCmd.Flags().StringVar(&snippetsDir, "snippets-dir", "", "Set the path where all snippets are located")
-	rootCmd.AddCommand(configCmd)
 }

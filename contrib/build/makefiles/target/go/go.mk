@@ -48,7 +48,7 @@ build-windows:
 	- @$(MAKE) --no-print-directory -f $(THIS_FILE) $(GO_BUILD_WINDOWS_TARGETS)
 	- $(call print_completed_target)
 
-build-mac-os:
+build-darwin:
 	- $(call print_running_target)
 	- @$(MAKE) --no-print-directory -f $(THIS_FILE) $(GO_BUILD_DARWIN_TARGETS)
 	- $(call print_completed_target)

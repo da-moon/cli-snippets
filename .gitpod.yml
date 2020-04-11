@@ -1,7 +1,5 @@
 image:
   file: contrib/gitpod/.gitpod.Dockerfile
-checkoutLocation: "go/src/github.com/da-moon/cli-snippets"
-workspaceLocation: "go/src/github.com/da-moon/cli-snippets"
 tasks:
   - init: >
       GO111MODULE=off go get -u -v github.com/cuonglm/gocmt &&
@@ -25,7 +23,7 @@ tasks:
       git checkout 2019.2 &&
       go get &&
       go install &&
-      cd /workspace/go/src/github.com/da-moon/cli-snippets &&
+      cd /workspace/cli-snippets &&
       make build
 vscode:
   extensions:
