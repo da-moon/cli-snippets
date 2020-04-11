@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/DrakeW/corgi/config"
-	"github.com/DrakeW/corgi/snippet"
-	"github.com/DrakeW/corgi/util"
+	"github.com/da-moon/cli-snippets/config"
+	"github.com/da-moon/cli-snippets/snippet"
+	"github.com/da-moon/cli-snippets/util"
 	"github.com/fatih/color"
 )
 

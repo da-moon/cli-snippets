@@ -9,8 +9,8 @@ import (
 	"os/exec"
 	"path"
 
-	"github.com/DrakeW/corgi/snippet"
-	"github.com/DrakeW/corgi/util"
+	"github.com/da-moon/cli-snippets/snippet"
+	"github.com/da-moon/cli-snippets/util"
 )
 
 type Config struct {

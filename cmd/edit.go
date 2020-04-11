@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/DrakeW/corgi/util"
+	"github.com/da-moon/cli-snippets/util"
 	"github.com/spf13/cobra"
 )
 

@@ -5,7 +5,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/DrakeW/corgi/snippet"
+	"github.com/da-moon/cli-snippets/snippet"
 	"github.com/spf13/cobra"
 )
 

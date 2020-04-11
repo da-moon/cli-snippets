@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/DrakeW/corgi/util"
+	"github.com/da-moon/cli-snippets/util"
 	"github.com/fatih/color"
 	"github.com/mitchellh/go-homedir"
 )

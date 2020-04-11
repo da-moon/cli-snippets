@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+  "go.testFlags": ["-v"],
+  "emeraldwalk.runonsave": {
+    "autoClearConsole": true,
+    "commands": [
+      {
+        "match": "\\.go$",
+        "isAsync": true,
+        "cmd": "gocmt -i -d ."
+      }
+    ]
+  }
+}
